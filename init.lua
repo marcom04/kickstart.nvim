@@ -65,6 +65,7 @@ require('lazy').setup({
   --    }
 
   require 'custom.plugins.guess-indent',
+
   require 'custom.plugins.gitsigns',
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
