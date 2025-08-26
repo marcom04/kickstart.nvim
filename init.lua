@@ -1,27 +1,23 @@
 --[[
   Useful things:
-    - https://learnxinyminutes.com/docs/lua/
-    - :help lua-guide
-    - https://neovim.io/doc/user/lua-guide.html
-    - :Tutor
-    - :help
-    - <space>sh
-    - :checkhealth
+    - [Lua crash course]      https://learnxinyminutes.com/docs/lua/
+    - [Lua-nvim guide]        :help lua-guide
+    - [Lua-nvim guide (HTML)] https://neovim.io/doc/user/lua-guide.html
+    - [nvim tutorial]         :Tutor
+    - [nvim help]             :help
+    - [Telescope search help] <space>sh
+    - [Kickstart healtcheck]  :checkhealth
+    - [Check plugins status]  :Lazy
+    - [Update plugins]        :Lazy update
 --]]
 
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-
--- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = true
-
+-- Core options
 require 'custom.options'
 
+-- Core keymappings
 require 'custom.mappings'
 
+-- Core autocommands
 require 'custom.autocmd'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
@@ -39,16 +35,6 @@ end
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
--- [[ Configure and install plugins ]]
---
---  To check the current status of your plugins, run
---    :Lazy
---
---  You can press `?` in this menu for help. Use `:q` to close the window
---
---  To update plugins you can run
---    :Lazy update
---
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
 
@@ -79,46 +65,8 @@ require('lazy').setup({
   require 'custom.plugins.lazydev',
   require 'custom.plugins.lspconfig',
 
-  { -- Autoformat
-    'stevearc/conform.nvim',
-    event = { 'BufWritePre' },
-    cmd = { 'ConformInfo' },
-    keys = {
-      {
-        '<leader>f',
-        function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
-        end,
-        mode = '',
-        desc = '[F]ormat buffer',
-      },
-    },
-    opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
-        else
-          return {
-            timeout_ms = 500,
-            lsp_format = 'fallback',
-          }
-        end
-      end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
-      },
-    },
-  },
+  -- Autoformat
+  require 'custom.plugins.conform',
 
   { -- Autocompletion
     'saghen/blink.cmp',
