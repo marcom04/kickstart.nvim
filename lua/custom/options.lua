@@ -8,7 +8,7 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 -- Set the global Nvim Python virtual env
-vim.g.python3_host_prog = os.getenv('PYNVIM_VENV')
+vim.g.python3_host_prog = os.getenv 'PYNVIM_VENV'
 
 -- Make line numbers default
 vim.o.number = true
