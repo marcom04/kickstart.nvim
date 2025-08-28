@@ -37,10 +37,10 @@ rtp:prepend(lazypath)
 
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
-
   -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
-
+  --
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
+  -- For example, see custom.plugins.gitsigns.lua.
   -- If you prefer to call `setup` explicitly, use:
   --    { 'lewis6991/gitsigns.nvim',
   --        config = function()
@@ -49,15 +49,31 @@ require('lazy').setup({
   --            })
   --        end,
   --    }
-
+  --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
 
+  -- Plugins can also be configured to run Lua code when they are loaded.
+  --
+  -- This is often very useful to both group configuration, as well as handle
+  -- lazy loading plugins that don't need to be loaded immediately at startup.
+  --
+  -- For example, see which-key configuration (custom.plugins.which-key.lua):
+  --  event = 'VimEnter'
+  -- which loads which-key before all the UI elements are loaded. Events can be
+  -- normal autocommands events (`:help autocmd-events`).
+  -- Then, because we use the `opts` key (recommended), the configuration runs
+  -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
+
+  -- Detect tabstop and shiftwidth automatically
   require 'custom.plugins.guess-indent',
 
+  -- Adds git related signs to the gutter, as well as utilities for managing changes
   require 'custom.plugins.gitsigns',
 
+  -- Show you pending keybinds
   require 'custom.plugins.which-key',
 
+  -- Fuzzy Finder (files, lsp, etc)
   require 'custom.plugins.telescope',
 
   -- LSP plugins
@@ -79,35 +95,9 @@ require('lazy').setup({
   -- Collection of various small independent plugins/modules
   require 'custom.plugins.mini',
 
-  { -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-  },
+  -- Highlight, edit, and navigate code
+  require 'custom.plugins.treesitter',
 
-  --  Here are some example plugins that I've included in the Kickstart repository.
-  --  Uncomment any of the lines below to enable them (you will need to restart nvim).
-  --
   -- require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
